@@ -1,0 +1,25 @@
+.is-container {
+    padding: 40px 25px;
+    width: 400px;
+    display: flex;
+    flex-direction: column;
+    background: #FFF5;
+    border-radius: 5px;
+
+    .is-input, .is-select {
+        border: none;
+        font-size: 20px;
+        margin: 0;
+        padding: 10px 15px 8px;
+        width: calc(100% - 30px);
+    }
+    .is-select {
+        width: 400px;
+    }
+    .is-option {
+        padding: 5px 15px;
+    }
+    .is-option:active {
+        border: solid blue;
+    }
+}
