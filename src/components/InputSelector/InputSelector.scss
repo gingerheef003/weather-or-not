@@ -6,15 +6,27 @@
     background: #FFF5;
     border-radius: 5px;
 
-    .is-input, .is-select {
+    .is-input, .is-select, .is-output {
         border: none;
         font-size: 20px;
         margin: 0;
         padding: 10px 15px 8px;
         width: calc(100% - 30px);
+        background: #0000;
+    }
+    .is-input:focus {
+        outline: none;
     }
     .is-select {
+        margin-top: 5px;
         width: 400px;
+    }
+    .is-output {
+        margin-top: 5px;
+        padding: 5px 15px;
+        text-align: left;
+        width: calc(100% - 34px);
+        border: green solid 2px;
     }
     .is-option {
         padding: 5px 15px;
@@ -23,3 +35,67 @@
         border: solid blue;
     }
 }
+
+.loader {
+    width: 30px;
+    height: 30px;
+    position: relative;
+    margin: auto;
+  
+    &::before, &::after {
+        content: '';
+        position: absolute;
+    }
+  
+    &-list {
+        display: grid;
+        grid-template: repeat(3, 120px) / repeat(3, 120px);
+        grid-gap: 30px;
+    }
+    
+    &-item {
+        display: flex;
+        background: rgba(0, 0, 0, 0.05);
+    }
+}
+
+.loader-3 {
+    &::before, &::after {
+        border-radius: 50%;
+        animation: 1s ease-in-out infinite;
+    }
+    &::before {
+        width: 16px;
+        height: 16px;
+        top: calc(50% - 8px) ;
+        left: calc(50% - 8px);
+        border-bottom-right-radius: 0;
+        box-shadow: 0 0 0 2px #fff;
+        background: radial-gradient(transparent 0, transparent 3px, #fff 3px);
+        transform: rotate(45deg);
+        animation-name: mapPin;
+    }
+    &::after {
+        width: 4px;
+        height: 2px;
+        opacity: 0.8;
+        top: 100%;
+        left: calc(50% - 2px);
+        background: #fff;
+        animation-name: mapPinShadow;
+    }
+}
+  
+@keyframes mapPin {
+    50% {
+        transform: rotate(45deg) translate(-50%, -50%);
+    }
+}
+
+@keyframes mapPinShadow {
+    50% {
+        transform: scaleX(3);
+        opacity: 0.2;
+    }
+}
+    

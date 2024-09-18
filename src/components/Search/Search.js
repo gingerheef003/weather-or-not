@@ -1,60 +1,62 @@
-import axios from "axios";
 import { useState } from "react";
-import Select from "react-select";
 import InputSelector from "../InputSelector/InputSelector";
 
 
 const Search = () => {
     const [input, setInput] = useState('');
-    const [options, setOptions] = useState([
-        {
-            value: 'asdf',
-            label: 'ASDF',
-        },
-        {
-            value: 'jkl;',
-            label: 'JKL:',
-        },
-    ]);
+    const [options, setOptions] = useState([]);
     const [timer, setTimer] = useState(null);
-    const [option, setOption] = useState(null);
+    const [option, setOption] = useState({});
 
     const request = async () => {
-        if (input) {
-            const response = await axios.get('https://spott.p.rapidapi.com/places/autocomplete', {
-                headers: {
-                    'X-RapidAPI-Key': '1f801c3222msh64f9fe6a43ed718p1cf750jsnd05a4ad3925f',
-                    'X-RapidAPI-Host': 'spott.p.rapidapi.com'
-                },
-                params: {
-                    q: input
-                }
-            })
-            setOptions(response.data.map((item) => ({
-                value: item.id,
-                label: item.name + (item.country ? (", " + item.country.id) : "")
+        await fetch(`https://spott.p.rapidapi.com/places/autocomplete?q=${input}`, {
+            headers: {
+                'X-RapidAPI-Key': '1f801c3222msh64f9fe6a43ed718p1cf750jsnd05a4ad3925f',
+                'X-RapidAPI-Host': 'spott.p.rapidapi.com'
+            }
+        }).then((response) => {
+            if (response.ok) return response.json()
+            else throw new Error('API request failed:', response.status)
+        }).then((data) => {
+            setOptions(data.map((item) => ({
+                value: item.coordinates,
+                id: item.id,
+                label: item.name + (item.country ? `, ${item.country.id}` : "")
             })))
-            console.log(options)
-        }
-        console.log('helo')
+        }).catch((error) => {
+            console.error('Error:',error);
+        })
     }
 
     const handleInputChange = (input) => {
         setInput(input)
 
         if (timer) clearTimeout(timer)
-        const newTimer = setTimeout(request, 500)
-        setTimer(newTimer)
+        if (input) {
+            setOptions([{
+                loading: true,
+                loadingAnimation: (
+                    <div class="container">
+                        <div className="loader loader-3"></div>
+                    </div>
+                )
+            }])
+            const newTimer = setTimeout(request, 500)
+            setTimer(newTimer)
+        } else {
+            setOptions([])
+        }
     }
     
     const handleSelectChange = (option) => {
         setOption(option)
+        console.log(option)
     }
     
     return ( 
         <div className="container">
             <InputSelector
-                value={option}
+                value={input}
                 placeholder={"Search..."}
                 onInputChange={handleInputChange}
                 onSelectChange={handleSelectChange}
